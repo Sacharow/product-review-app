@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import productImg from '../assets/product-29.svg'
+import ReviewSection from './ReviewSection'
 
 const productData = {
     1: { name: 'Product 1', description: 'This is the first product.' },
@@ -20,6 +21,7 @@ export default function Product() {
             <h1>{product.name}</h1>
             <img src={productImg} alt={product.name} width={150} />
             <p>{product.description}</p>
+            <ReviewSection product={product.name} />
         </div>
     )
 }

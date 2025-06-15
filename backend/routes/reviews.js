@@ -8,7 +8,7 @@ router.post('/', async (req, res) => {
     const { product, is_positive, text, user = 'anonymous' } = req.body
     try {
         await db.query(
-            `INSERT INTO reviews (product, stance, is_positive, text, user) VALUES ($1, 'Sent', $2, $3, $4)`,
+            `INSERT INTO reviews (product, stance, is_positive, text, "user") VALUES ($1, 'Sent', $2, $3, $4)`,
             [product, is_positive, text, user]
         )
         res.status(201).json({ message: 'Review added' })
