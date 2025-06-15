@@ -8,7 +8,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+      test: ["CMD-SHELL", "apk add --no-cache curl >/dev/null 2>&1; curl -f http://localhost || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -24,7 +24,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/api/parcels/TEST"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
