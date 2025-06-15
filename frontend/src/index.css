@@ -35,11 +35,9 @@ body {
   display: flex;
   place-items: center;
   flex-direction: column;
-  /* Add this */
   align-items: center;
-  /* Add this */
   justify-content: center;
-  /* Add this */
+
   min-width: 320px;
   min-height: 40vh;
 }

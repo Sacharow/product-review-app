@@ -17,7 +17,7 @@ export default function Product() {
     }
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '4rem' }}>
             <h1>{product.name}</h1>
             <img src={productImg} alt={product.name} width={150} />
             <p>{product.description}</p>

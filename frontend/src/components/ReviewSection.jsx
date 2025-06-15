@@ -10,15 +10,38 @@ export default function ReviewSection({ product }) {
 
     // Fetch reviews for this product
     useEffect(() => {
+        let ignore = false
         setLoading(true)
         fetch(`/api/reviews/${encodeURIComponent(product)}`)
             .then(res => res.json())
             .then(data => {
-                setReviews(Array.isArray(data) ? data : [])
-                setLoading(false)
+                if (!ignore) {
+                    setReviews(Array.isArray(data) ? data : [])
+                    setLoading(false)
+                }
             })
-            .catch(() => setLoading(false))
+            .catch(() => { if (!ignore) setLoading(false) })
+        return () => { ignore = true }
     }, [product, success])
+
+    // Poll for review updates every 2 seconds
+    useEffect(() => {
+        if (!product) return
+        let ignore = false
+        const fetchReviews = () => {
+            fetch(`/api/reviews/${encodeURIComponent(product)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!ignore) setReviews(Array.isArray(data) ? data : [])
+                })
+                .catch(() => { })
+        }
+        const interval = setInterval(fetchReviews, 2000)
+        return () => {
+            ignore = true
+            clearInterval(interval)
+        }
+    }, [product])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -85,8 +108,11 @@ export default function ReviewSection({ product }) {
                             <span style={{ color: r.is_positive ? 'green' : 'red', fontWeight: 'bold' }}>
                                 {r.is_positive ? 'Positive' : 'Negative'}
                             </span>
-                            <span style={{ marginLeft: 8, color: '#555' }}>{r.user || 'anonymous'}</span>
-                            <div style={{ marginTop: 4 }}>{r.text}</div>
+                            <span style={{ marginLeft: 8, color: 'black' }}>{r.user || 'anonymous'}</span>
+                            <span style={{ marginLeft: 8, color: 'black', fontWeight: 'bold' }}>
+                                [{r.stance}]
+                            </span>
+                            <div style={{ marginTop: 4, color: 'black' }}>{r.text}</div>
                             <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
                                 {new Date(r.last_updated).toLocaleString()}
                             </div>
