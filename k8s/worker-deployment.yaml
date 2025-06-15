@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: worker
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/microservice-app-app-network: "true"
+        io.kompose.service: worker
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -z db 5432; do echo "waiting for db"; sleep 5; done;']
+      containers:
+        - env:
+            - name: DATABASE_URL
+              value: postgresql://user:password@db:5432/appdb
+          image: worker
+          imagePullPolicy: Never
+          name: worker
+          resources: {}
+      restartPolicy: Always
+status: {}
